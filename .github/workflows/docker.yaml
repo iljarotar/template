@@ -30,6 +30,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Fetch tags
+        run: git fetch --prune --unshallow
+
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
