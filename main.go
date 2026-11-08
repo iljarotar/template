@@ -22,12 +22,12 @@ func main() {
 		Name:    "template",
 		Version: version,
 		Flags: []cli.Flag{
-			&cli.StringFlag{
+			&cli.StringSliceFlag{
 				Name:        "template",
 				DefaultText: "path to a template file",
 				Usage:       "specify path to a template file",
 				Required:    true,
-				Value:       "",
+				Value:       nil,
 				Aliases:     []string{"t"},
 			},
 			&cli.StringFlag{
@@ -47,14 +47,14 @@ func main() {
 			},
 		},
 		Usage:       "renders go templates",
-		UsageText:   "template -t <template-file> -o <output-file> (-d <data-file>)",
+		UsageText:   "template -t <template-file> (-t <template-file2> ...) -o <output-file> (-d <data-file>)",
 		Description: "template renderer for go templates",
 		Action: func(ctx context.Context, cmd *cli.Command) error {
-			tmpl := cmd.String("template")
+			tmpls := cmd.StringSlice("template")
 			data := cmd.String("data")
 			out := cmd.String("output")
 
-			return renderer.Render(tmpl, data, out)
+			return renderer.Render(data, out, tmpls...)
 		},
 	}
 

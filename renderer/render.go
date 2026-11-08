@@ -11,7 +11,7 @@ type (
 	templateData map[string]any
 )
 
-func Render(tmplPath, dataPath, outPath string) error {
+func Render(dataPath, outPath string, tmpls ...string) error {
 	dataBytes, err := os.ReadFile(dataPath)
 	if err != nil {
 		return fmt.Errorf("failed to read data file %s: %w", dataPath, err)
@@ -23,9 +23,9 @@ func Render(tmplPath, dataPath, outPath string) error {
 		return fmt.Errorf("failed to parse data file %s: %w", dataPath, err)
 	}
 
-	tmpl, err := template.ParseFiles(tmplPath)
+	tmpl, err := template.ParseFiles(tmpls...)
 	if err != nil {
-		return fmt.Errorf("failed to parse template file %s: %w", tmplPath, err)
+		return fmt.Errorf("failed to parse template file %s: %w", tmpls, err)
 	}
 
 	outFile, err := os.Create(outPath)
