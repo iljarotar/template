@@ -36,16 +36,10 @@ func Render(dataPath, outPath string, tmplFiles ...string) error {
 		return nil
 	}
 
-	tmpl := template.Must(template.New(filepath.Base(tmplFiles[0])).Funcs(template.FuncMap{
-		"includeHTML": func(filePath string) (template.HTML, error) {
-			bytes, err := os.ReadFile(filePath)
-			if err != nil {
-				return "", fmt.Errorf("failed to read file %s: %w", filePath, err)
-			}
-
-			return template.HTML(bytes), nil
-		},
-	}).ParseFiles(tmplFiles...))
+	tmpl, err := template.New(filepath.Base(tmplFiles[0])).Funcs(funcs).ParseFiles(tmplFiles...)
+	if err != nil {
+		return fmt.Errorf("failed to parse template files: %w", err)
+	}
 
 	return tmpl.Execute(outFile, data)
 }
